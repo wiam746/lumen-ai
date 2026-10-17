@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Ask{% endblock %}
+{% block content %}
+<h1>Ask Lumen</h1>
+<div class="split">
+  <div class="stack">
+    <form class="card stack" method="post" novalidate>
+      {{ csrf_field() }}
+      <div class="field"><label for="prompt">Your question, or a text to summarise</label>
+        <textarea id="prompt" name="prompt" maxlength="{{ max_prompt_chars }}" data-counter="#count" required>{{ prompt or '' }}</textarea>
+        <div class="counter" id="count" aria-live="polite"></div>
+        <p class="hint">Do not enter personal data (names, contact details, ID numbers, health information).</p></div>
+      <div><button class="btn" type="submit">Ask</button></div>
+    </form>
+    {% if answer %}
+    <section class="card answer" aria-label="Answer">
+      <div class="row between">
+        <div class="row"><span class="badge badge-info">AI-generated</span>
+          <span class="badge {{ 'badge-bad' if result.external else 'badge-ok' }}">{{ result.provider }}{% if result.external %} · external{% endif %}</span></div>
+        <span class="small muted">Request #{{ request_id }}</span>
+      </div>
+      <div class="md mt2" data-md>{{ answer }}</div>
+      {% if result.note %}<p class="small muted">{{ result.note }}</p>{% endif %}
+      {% if flagged %}<p class="flash flash-warning">{{ flag_reason }}</p>{% endif %}
+      <p class="small muted mb0">This answer may contain errors. Do not rely on it for decisions about people.
+        <a href="{{ url_for('privacy.contest', request_id=request_id) }}">Contest this answer</a></p>
+    </section>
+    {% endif %}
+  </div>
+  <aside class="card" aria-label="What happens to your message">
+    <h2>What happens to your message</h2>
+    <ol class="journey {{ 'external' if provider.external }}">
+      <li><strong>It is scanned on the server</strong>Identifiers and secrets are rejected. Rejected messages are never stored or sent.</li>
+      <li><strong>{{ provider.label }} answers</strong>
+        {% if provider.external %}Your message leaves {{ org_name }} and is processed on {{ provider.where }}.
+        {% else %}It stays on {{ provider.where }}.{% endif %}
+        {% if provider.note %}<br><span class="muted">{{ provider.note }}</span>{% endif %}</li>
+      <li><strong>It is stored encrypted</strong>Deleted automatically after {{ retention_days }} days, or whenever you delete it.</li>
+      <li><strong>A person reviews flagged content</strong>You can contest any answer or decision.</li>
+    </ol>
+  </aside>
+</div>
+{% endblock %}

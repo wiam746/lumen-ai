@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('admin.home') }}">Back to review</a></p>
+<h1>Users</h1>
+<p class="muted">Message content is not shown here.</p>
+<div class="card table-wrap"><table>
+  <thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Created</th><th>Requests</th><th>Warnings</th><th>Status</th><th></th></tr></thead>
+  <tbody>{% for u in users %}
+    <tr><td>{{ u.id }}</td><td>{{ u.username }}</td><td>{{ u.role }}</td><td>{{ u.created_at }}</td><td>{{ u.requests }}</td><td>{{ u.warnings }}</td>
+      <td>{% if u.is_blocked %}<span class="badge badge-bad">suspended</span>{% if u.blocked_reason %}<br><span class="small muted">{{ u.blocked_reason }}</span>{% endif %}
+          {% else %}<span class="badge badge-ok">active</span>{% endif %}</td>
+      <td>{% if u.is_blocked %}<form method="post" action="{{ url_for('admin.unblock', user_id=u.id) }}">{{ csrf_field() }}
+          <button class="btn btn-sm btn-quiet" type="submit">Reactivate</button></form>{% endif %}</td></tr>
+  {% endfor %}</tbody></table></div>
+{% endblock %}

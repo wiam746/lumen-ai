@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}How this AI works{% endblock %}
+{% block content %}
+<article class="prose">
+<h1>How this AI works</h1>
+<p class="lead">Lumen is an AI system. This page explains in plain terms what it is, what it can and cannot do, and who is accountable.</p>
+<h2>What it is</h2>
+<p>Lumen sends your message to a language model and shows the reply. The model predicts plausible text; it does not look facts up unless an administrator has given it organization documents, and it does not understand or verify what it writes.</p>
+<p>Currently active: <span class="badge {{ 'badge-bad' if provider.external else 'badge-ok' }}">{{ provider.label }}</span> on {{ provider.where }}.</p>
+<h2>Known limits and risks</h2>
+<ul>
+  <li><strong>Errors and invented facts.</strong> Answers can be confidently wrong, including sources and quotations.</li>
+  <li><strong>Bias.</strong> Models reflect biases of their training data and may treat groups unequally.</li>
+  <li><strong>Over-reliance.</strong> A fluent answer is not a verified one. Check what matters.</li>
+  <li><strong>Privacy.</strong> The personal-data filter uses patterns; it misses names, indirect identifiers and disguised data.</li>
+  <li><strong>Manipulation.</strong> Text pasted into Lumen can try to steer the model (prompt injection).</li>
+</ul>
+<h2>Safeguards</h2>
+<ul>
+  <li>Identifiers and secrets are rejected before storage or processing.</li>
+  <li>Every answer is labelled as AI-generated; it is never presented as a decision.</li>
+  <li>Sensitive topics are flagged for human review. A person, never the AI, decides about warnings, deletions and suspensions.</li>
+  <li>Decisions leave a tamper-evident audit trail and can be contested.</li>
+  <li>Data is encrypted, deleted automatically, and under your control.</li>
+</ul>
+<h2>Who is accountable</h2>
+<p>{{ org_name }} is the data controller and answers for the system. Administrators act as human reviewers. Questions: <a href="mailto:{{ dpo_contact }}">{{ dpo_contact }}</a>.</p>
+</article>
+{% endblock %}

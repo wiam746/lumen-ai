@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Contest{% endblock %}
+{% block page_class %}mid{% endblock %}
+{% block content %}
+<h1>Contest a decision</h1>
+<p class="lead">If an AI answer is wrong or harmful, or you disagree with a moderation decision (warning, deletion, suspension), tell us. A human reviewer decides and explains the outcome.</p>
+<form class="card stack" method="post" action="{{ url_for('privacy.contest_create') }}">
+  {{ csrf_field() }}
+  <div class="field"><label for="kind">What are you contesting?</label>
+    <select id="kind" name="kind">
+      <option value="ai_output">An AI answer</option>
+      <option value="moderation">A moderation decision</option>
+      <option value="other">Something else</option></select></div>
+  <div class="field"><label for="request_id">Request number (optional)</label>
+    <input id="request_id" name="request_id" type="number" min="1" value="{{ prefill or '' }}"></div>
+  <div class="field"><label for="message">Explain your contest</label>
+    <textarea id="message" name="message" maxlength="2000" required></textarea>
+    <p class="hint">Do not include personal data about other people.</p></div>
+  <div><button class="btn" type="submit">Submit contest</button></div>
+</form>
+<h2 class="mt3">Your contests</h2>
+{% if contests %}
+<div class="stack">{% for c in contests %}
+  <div class="card">
+    <div class="row between"><strong>Contest #{{ c.id }}</strong>
+      <span class="badge {{ {'open': 'badge-info', 'accepted': 'badge-ok', 'rejected': 'badge-warn'}[c.status] }}">{{ c.status }}</span></div>
+    <p class="small muted">{{ c.created_at }} UTC{% if c.request_id %} &middot; request #{{ c.request_id }}{% endif %}</p>
+    <p>{{ c.message }}</p>
+    {% if c.decision_note %}<p class="mb0"><strong>Decision:</strong> {{ c.decision_note }}</p>{% endif %}
+  </div>{% endfor %}</div>
+{% else %}<div class="card"><p class="mb0">You have not contested anything.</p></div>{% endif %}
+{% endblock %}

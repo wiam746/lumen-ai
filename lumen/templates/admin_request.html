@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Review request #{{ row.id }}{% endblock %}
+{% block page_class %}mid{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('admin.home') }}">Back to queue</a></p>
+<h1>Review request #{{ row.id }}</h1>
+<p class="muted">User {{ row.username }} &middot; {{ row.created_at }} UTC &middot; {{ row.provider }}
+  {% if row.external_transfer %}<span class="badge badge-bad">external transfer</span>{% endif %}
+  <span class="badge badge-warn">{{ row.review_status }}</span></p>
+<p class="flash flash-warning">{{ row.flag_reason }}</p>
+<p class="small muted">Opening this page is recorded in the audit trail. Read only what you need to decide.</p>
+<div class="card stack">
+  <div><h3>Message</h3><div class="md">{{ row.prompt }}</div></div>
+  <div><h3>Answer</h3><div class="md" data-md>{{ row.response }}</div></div>
+</div>
+{% if row.review_status == 'pending' %}
+<form class="card stack mt2" method="post" action="{{ url_for('admin.review', req_id=row.id) }}">
+  {{ csrf_field() }}<h2>Decision</h2>
+  <label class="check"><input type="radio" name="action" value="validate" required><span><strong>Validate</strong>: acceptable use, no further action</span></label>
+  <label class="check"><input type="radio" name="action" value="warn"><span><strong>Warn the user</strong>: recorded as a warning</span></label>
+  <label class="check"><input type="radio" name="action" value="delete"><span><strong>Delete the content</strong>: permanently removes this request</span></label>
+  <label class="check"><input type="radio" name="action" value="block"><span><strong>Suspend the account</strong>: the user can still contest</span></label>
+  <div class="field"><label for="note">Justification (required except for Validate)</label>
+    <input id="note" name="note" type="text" maxlength="500"></div>
+  <div><button class="btn" type="submit">Record decision</button></div>
+</form>
+{% else %}<p class="card">Decided: <strong>{{ row.review_status }}</strong>. {{ row.review_note }}</p>{% endif %}
+{% endblock %}

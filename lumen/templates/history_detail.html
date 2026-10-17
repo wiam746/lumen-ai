@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Request #{{ row.id }}{% endblock %}
+{% block page_class %}mid{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('chat.history') }}">Back to history</a></p>
+<h1>Request #{{ row.id }}</h1>
+<p class="muted">{{ row.created_at }} UTC &middot; {{ row.provider }} ({{ row.model }})
+  {% if row.external_transfer %}<span class="badge badge-bad">sent to an external provider</span>{% endif %}
+  {% if row.is_flagged %}<span class="badge badge-warn">flagged: {{ row.review_status }}</span>{% endif %}</p>
+<div class="card stack">
+  <div><h3>Your message</h3><div class="md">{{ row.prompt }}</div></div>
+  <div><h3>Answer <span class="badge badge-info">AI-generated</span></h3><div class="md" data-md>{{ row.response }}</div></div>
+  {% if row.review_note %}<p class="small muted">Reviewer note: {{ row.review_note }}</p>{% endif %}
+</div>
+<div class="row mt2">
+  <a class="btn btn-quiet" href="{{ url_for('privacy.contest', request_id=row.id) }}">Contest this answer</a>
+  <form method="post" action="{{ url_for('chat.delete_request', req_id=row.id) }}" data-confirm="Delete this request permanently?">
+    {{ csrf_field() }}<button class="btn btn-danger" type="submit">Delete</button></form>
+</div>
+{% endblock %}

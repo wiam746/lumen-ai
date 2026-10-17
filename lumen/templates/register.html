@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Create account{% endblock %}
+{% block page_class %}narrow{% endblock %}
+{% block content %}
+<h1>Create account</h1>
+<p class="muted">We collect only a username and a password hash: no name, no e-mail.</p>
+<form class="card stack" method="post" novalidate>
+  {{ csrf_field() }}
+  <div class="field"><label for="username">Username</label>
+    <input id="username" name="username" type="text" value="{{ username or '' }}" autocomplete="username" required maxlength="32">
+    <p class="hint">Use a pseudonym. Do not use your real name or e-mail address.</p></div>
+  <div class="field"><label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="new-password" required>
+    <p class="hint">At least 10 characters, mixing letters and digits or symbols.</p></div>
+  <div class="field"><label for="password_confirm">Repeat password</label>
+    <input id="password_confirm" name="password_confirm" type="password" autocomplete="new-password" required></div>
+  {% if registration_code_required %}
+  <div class="field"><label for="registration_code">Registration code</label>
+    <input id="registration_code" name="registration_code" type="password" autocomplete="off" required>
+    <p class="hint">Ask an administrator of {{ org_name }}.</p></div>
+  {% endif %}
+  <label class="check"><input type="checkbox" name="accept_policy" value="1" required>
+    <span>I have read the <a href="{{ url_for('pages.policy') }}">acceptable use policy</a> and the
+    <a href="{{ url_for('pages.privacy_notice') }}">privacy notice</a> (version {{ policy_version }}).</span></label>
+  <button class="btn" type="submit">Create account</button>
+</form>
+{% endblock %}

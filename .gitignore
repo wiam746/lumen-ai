@@ -1,0 +1,21 @@
+# Secrets and runtime data: never commit these
+.env
+instance/
+*.db
+*.db-wal
+*.db-shm
+*.key
+config/knowledge_base.md
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

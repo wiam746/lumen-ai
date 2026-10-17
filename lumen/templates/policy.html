@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Acceptable use{% endblock %}
+{% block content %}
+<article class="prose">
+<h1>Acceptable use policy</h1>
+<p class="lead">Version {{ policy_version }}. By creating an account you agree to the rules below.</p>
+<h2>Do</h2>
+<ul>
+  <li>Use Lumen for professional or educational tasks: explaining, summarising, drafting, brainstorming.</li>
+  <li>Check important answers against reliable sources or with a person.</li>
+  <li>Tell Lumen's reviewers if an answer is wrong or harmful, using <a href="{{ url_for('privacy.contest') }}">Contest</a>.</li>
+</ul>
+<h2>Do not</h2>
+<ul>
+  <li>Enter personal data about yourself or others: names with contact details, ID or bank numbers, passwords, health or other sensitive information. Lumen rejects what it recognises, but it cannot recognise everything: the responsibility is yours.</li>
+  <li>Use Lumen to decide, rank, grade or sanction people. It informs; humans decide.</li>
+  <li>Ask for harmful, illegal, discriminatory or deceptive content, or try to bypass the safeguards.</li>
+  <li>Share your account, or attempt to access other users' data.</li>
+  <li>Present AI output as verified fact or as your own unreviewed work where disclosure is required.</li>
+</ul>
+<h2>What happens if rules are broken</h2>
+<p>Flagged messages are reviewed by a person who may validate, warn, delete the content, or suspend the account, always with a written reason. You can contest every decision, and a suspended account can still contest, export and delete its data.</p>
+</article>
+{% endblock %}

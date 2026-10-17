@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+{% block content %}
+<h1>History</h1>
+{% if rows %}
+<div class="card table-wrap"><table>
+  <thead><tr><th>Date (UTC)</th><th>Message</th><th>Processed by</th><th>Status</th><th></th></tr></thead>
+  <tbody>{% for r in rows %}
+    <tr><td>{{ r.created_at }}</td><td>{{ r.prompt_preview }}</td>
+      <td>{{ r.provider }}{% if r.external_transfer %} <span class="badge badge-bad">external</span>{% endif %}</td>
+      <td>{% if r.is_flagged %}<span class="badge badge-warn">{{ r.review_status }}</span>{% else %}<span class="badge badge-ok">ok</span>{% endif %}</td>
+      <td><a href="{{ url_for('chat.history_detail', req_id=r.id) }}">Open</a></td></tr>
+  {% endfor %}</tbody></table></div>
+<div class="pager">
+  {% if page > 1 %}<a class="btn btn-quiet btn-sm" href="{{ url_for('chat.history', page=page-1) }}">Previous</a>{% endif %}
+  <span class="muted small">Page {{ page }} of {{ pages }} ({{ total }} requests)</span>
+  {% if page < pages %}<a class="btn btn-quiet btn-sm" href="{{ url_for('chat.history', page=page+1) }}">Next</a>{% endif %}
+</div>
+{% else %}<div class="card"><p class="mb0">No requests stored. <a href="{{ url_for('chat.ask') }}">Ask a question</a>.</p></div>{% endif %}
+{% endblock %}

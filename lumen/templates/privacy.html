@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Privacy notice{% endblock %}
+{% block content %}
+<article class="prose">
+<h1>Privacy notice</h1>
+<p class="lead">Version {{ policy_version }}. This notice explains what Lumen does with your data (GDPR Art. 13; Moroccan Law 09-08, Art. 5).</p>
+
+<h2>Who is responsible</h2>
+<p>The data controller is <strong>{{ org_name }}</strong>. Contact for privacy questions and to exercise your rights: <a href="mailto:{{ dpo_contact }}">{{ dpo_contact }}</a>.</p>
+
+<h2>What we collect, and why</h2>
+<ul>
+  <li><strong>Account:</strong> a username (pseudonym), a password hash, your role, consent record and sign-in time. Purpose: authentication and access control.</li>
+  <li><strong>Requests:</strong> the messages you send and the answers you receive, stored encrypted. Purpose: provide the assistant and your personal history.</li>
+  <li><strong>Audit trail:</strong> pseudonymous user ID, action, time and a truncated IP address. Never your message content or username. Purpose: security, accountability and investigating misuse.</li>
+</ul>
+<p>We do not collect your name, e-mail, device identifiers, or analytics. We load no third-party fonts, scripts or trackers.</p>
+
+<h2>Legal basis</h2>
+<p>Provision of an internal service in the organization's mission (public interest or legitimate interest, GDPR Art. 6(1)(e)/(f)); security logging is a legitimate interest. No sensitive data is intended to be processed: the system rejects identifiers and flags sensitive topics.</p>
+
+<h2>Who receives your messages</h2>
+{% if provider.external %}
+<p><strong>This deployment sends your messages to {{ provider.label }}, operating on {{ provider.where }}.</strong> This is a transfer outside the organization and outside the country. It is covered by a documented assessment and safeguards. You may object in <a href="{{ url_for('privacy.settings') }}">Settings</a>: Lumen then answers with the built-in offline assistant.</p>
+{% else %}
+<p>This deployment processes your messages on {{ provider.where }}. No message is sent to a third party. If an administrator enables an external provider, this notice and the <em>Ask</em> page will say so before your next message.</p>
+{% endif %}
+<p>Reviewers (administrators) can read a message only if it was flagged as possibly sensitive, and each such access is recorded.</p>
+
+<h2>How long we keep it</h2>
+<ul>
+  <li>Requests: {{ retention_days }} days, then deleted automatically (or sooner if you delete them).</li>
+  <li>Contests and warnings: 12 months after the decision.</li>
+  <li>Audit trail: 12 months. Failed sign-in counters: 24 hours.</li>
+</ul>
+
+<h2>Your rights</h2>
+<p>Access and export, rectification, erasure, objection, and not being subject to a decision based solely on automated processing: all are available from <a href="{{ url_for('privacy.my_data') }}">My data</a> and <a href="{{ url_for('privacy.settings') }}">Settings</a>. Lumen takes no decision with legal or similar effect on you: a human decides every moderation action, and you can <a href="{{ url_for('privacy.contest') }}">contest</a> any of them. We answer within one month.</p>
+<p>You may lodge a complaint with a data protection authority: in Morocco, the CNDP (Commission Nationale de contrôle de la protection des Données à caractère Personnel); in the EU, your national supervisory authority.</p>
+
+<h2>Security</h2>
+<p>Messages are encrypted at rest, passwords are hashed with scrypt, sessions use protected cookies, sign-in attempts are throttled, and administrative actions are written to a tamper-evident audit trail.</p>
+</article>
+{% endblock %}

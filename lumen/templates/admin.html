@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Review{% endblock %}
+{% block content %}
+<div class="row between"><h1>Human review</h1><a class="btn btn-quiet" href="{{ url_for('admin.users') }}">Users</a></div>
+<div class="grid cols-3 mt2">
+  <div class="card stat"><b>{{ stats.pending }}</b>flagged requests to review</div>
+  <div class="card stat"><b>{{ stats.contests }}</b>open contests</div>
+  <div class="card stat"><b>{{ stats.users }}</b>users &middot; {{ stats.requests }} requests</div>
+</div>
+<h2 class="mt3">Flagged requests</h2>
+{% if pending %}
+<div class="card table-wrap"><table>
+  <thead><tr><th>#</th><th>User</th><th>Reason</th><th>Excerpt</th><th></th></tr></thead>
+  <tbody>{% for r in pending %}
+    <tr><td>{{ r.id }}</td><td>{{ r.username }}</td><td>{{ r.flag_reason }}</td><td>{{ r.prompt_preview }}</td>
+      <td><a class="btn btn-sm" href="{{ url_for('admin.request_detail', req_id=r.id) }}">Review</a></td></tr>
+  {% endfor %}</tbody></table></div>
+{% else %}<div class="card"><p class="mb0">The queue is empty.</p></div>{% endif %}
+<h2 class="mt3">Open contests</h2>
+{% if contests %}
+<div class="stack">{% for c in contests %}
+  <form class="card stack" method="post" action="{{ url_for('admin.decide_contest', contest_id=c.id) }}">
+    {{ csrf_field() }}
+    <div class="row between"><strong>Contest #{{ c.id }} by {{ c.username }}</strong><span class="badge badge-info">{{ c.kind }}</span></div>
+    <p class="mb0">{{ c.message }}</p>
+    <p class="small muted mb0">{{ c.created_at }} UTC{% if c.request_id %} &middot; request #{{ c.request_id }}{% endif %}</p>
+    <div class="field"><label for="note{{ c.id }}">Decision and reasoning (sent to the user)</label>
+      <input id="note{{ c.id }}" name="note" type="text" required minlength="5"></div>
+    {% if c.is_blocked %}<label class="check"><input type="checkbox" name="unblock" value="1"><span>If accepted, reactivate this account</span></label>{% endif %}
+    <div class="row">
+      <button class="btn" type="submit" name="decision" value="accepted">Accept contest</button>
+      <button class="btn btn-quiet" type="submit" name="decision" value="rejected">Reject contest</button></div>
+  </form>{% endfor %}</div>
+{% else %}<div class="card"><p class="mb0">No open contests.</p></div>{% endif %}
+{% endblock %}

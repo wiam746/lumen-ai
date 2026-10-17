@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}My data{% endblock %}
+{% block page_class %}mid{% endblock %}
+{% block content %}
+<h1>My data</h1>
+<p class="lead">You can see, export, correct, object to and erase your data at any time.</p>
+<div class="grid cols-3">
+  <div class="card stat"><b>{{ counts.requests }}</b>requests</div>
+  <div class="card stat"><b>{{ counts.warnings }}</b>warnings</div>
+  <div class="card stat"><b>{{ counts.contests }}</b>contests</div>
+</div>
+<div class="card stack mt2">
+  <div><h3>Access and portability</h3>
+    <p>Download everything we hold about you: account details, full messages and answers, warnings and contests, as a JSON file.</p>
+    <a class="btn" href="{{ url_for('privacy.export_data') }}">Export my data</a></div>
+  <div><h3>Rectification and objection</h3>
+    <p>Change your username or password, or object to processing by an external AI provider.</p>
+    <a class="btn btn-quiet" href="{{ url_for('privacy.settings') }}">Open settings</a></div>
+  <div><h3>Erasure</h3>
+    <p>Delete your whole request history now. To delete your account too, use <a href="{{ url_for('privacy.settings') }}">Settings</a>.</p>
+    <form method="post" action="{{ url_for('privacy.delete_history') }}" data-confirm="Delete your entire request history? This cannot be undone.">
+      {{ csrf_field() }}<button class="btn btn-danger" type="submit">Delete my history</button></form></div>
+  <div><h3>Contest a decision</h3>
+    <p>Disagree with an answer or a moderation decision? A human will review it.</p>
+    <a class="btn btn-quiet" href="{{ url_for('privacy.contest') }}">Contest</a></div>
+</div>
+<p class="mt2 small muted">Questions: <a href="mailto:{{ dpo_contact }}">{{ dpo_contact }}</a>. You may also complain to your data protection authority
+  (in Morocco, the CNDP; in the EU, your national supervisory authority). See the <a href="{{ url_for('pages.privacy_notice') }}">privacy notice</a>.</p>
+{% endblock %}
